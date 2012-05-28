@@ -1,58 +1,24 @@
 DeviseOmniauth::Application.routes.draw do
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
 
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
+  #tell Devise in which controller we will implement Omniauth callbacks
+  devise_for :users, :controllers => {:omniauth_callbacks => "users/omniauth_callbacks" }
 
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
+  ########### For Twitter ##################
+  get '/fetch_email_from_twitter/:twitter_uid' => "users/fetch_email#fetch_email_from_twitter" , :as => :fetch_email_from_twitter
+  post 'fetch_email_from_twitter_and_create' => "users/fetch_email#fetch_email_from_twitter_and_create" , :as => :fetch_email_from_twitter_and_create
+  match "/confirm_twitter/:token/:twitter_uid"=>"users/fetch_email#confirm_twitter",:as=>:confirm_twitter
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+  ########## For Linked In ##################
+  get '/fetch_email_from_linkedin/:linkedin_uid' => "users/fetch_email#fetch_email_from_linkedin" , :as => :fetch_email_from_linkedin
+  post 'fetch_email_from_linkedin_and_create' => "users/fetch_email#fetch_email_from_linkedin_and_create" , :as => :fetch_email_from_linkedin_and_create
+  match "/confirm_linkedin/:token/:linkedin_uid"=>"users/fetch_email#confirm_linkedin",:as=>:confirm_linkedin
 
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
+  devise_scope :user do
+    get "/login" => "devise/sessions#new"
+    delete "/logout" => "devise/sessions#destroy"
+    get '/users/auth/:provider' => 'users/omniauth_callbacks#passthru'
+  end
 
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => "welcome#index"
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
+  get "home/index"
+  root :to => "home#index"
 end

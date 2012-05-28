@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#user_submit').click(function() {
+            $(".error").hide();
+            var hasError = false;
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            var emailaddressVal = $("#user_email").val();
+            if(emailaddressVal == '') {
+                $("#user_email").after('<span class="error">Please enter your email address.</span>');
+                hasError = true;
+            }
+            else if(!emailReg.test(emailaddressVal)) {
+                $("#user_email").after('<span class="error">Enter a valid email address.</span>');
+                hasError = true;
+            }
+            if(hasError == true) { return false; }
+
+        });
+    });
+</script>
+
+<%= form_for(@user,  :url => fetch_email_from_linkedin_and_create_path) do |f| %>
+    <%=  f.error_messages %>
+
+    <%= f.hidden_field :linkedin_uid %>
+    <div><%= f.label :email %><br />
+      <%= f.email_field :email %></div>
+    <div><%= f.submit "Sign up" %></div>
+<% end %>

@@ -1,0 +1,2 @@
+module Users::FetchEmailHelper
+end

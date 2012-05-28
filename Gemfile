@@ -5,8 +5,19 @@ gem 'rails', '3.0.10'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2', '~> 0.2.11'
+gem 'mysql2', '~> 0.2.7'
 
+gem "devise", "1.5.2"
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-linkedin'
+gem 'omniauth-openid'
+
+group :development, :test do
+  gem 'thin' # to ver come from for google login request URI too long for mongrel
+  gem "nifty-generators"
+end
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -29,3 +40,4 @@ gem 'mysql2', '~> 0.2.11'
 # group :development, :test do
 #   gem 'webrat'
 # end
+gem "mocha", :group => :test
