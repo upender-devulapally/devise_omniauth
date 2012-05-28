@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
     data = access_token.extra.raw_info
     puts "##############   #{data.inspect}"
     if user = self.find_by_email(data.email)
+      user.confirm! unless user.confirmed?
       user
     else # Create a user with a stub password.
       user = User.new(:email => data.email, :password => Devise.friendly_token[0,20], :type => 'social')
@@ -64,6 +65,7 @@ class User < ActiveRecord::Base
     data = access_token.info
     puts "##############   #{data.inspect}"
     if user = User.where(:email => data["email"]).first
+      user.confirm! unless user.confirmed?
       user
     else
       user = User.new(:email =>  data["email"], :password => Devise.friendly_token[0,20], :type => 'social')
