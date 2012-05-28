@@ -29,7 +29,10 @@ class User < ActiveRecord::Base
     if user = self.find_by_email(data.email)
       user
     else # Create a user with a stub password.
-      self.create!(:email => data.email, :password => Devise.friendly_token[0,20]).confirm!
+      user = User.new(:email => data.email, :password => Devise.friendly_token[0,20], :type => 'social')
+      user.skip_confirmation!
+      user.save!
+      user
     end
   end
 
@@ -63,7 +66,10 @@ class User < ActiveRecord::Base
     if user = User.where(:email => data["email"]).first
       user
     else
-      User.create!(:email => data["email"], :password => Devise.friendly_token[0,20]).confirm!
+      user = User.new(:email =>  data["email"], :password => Devise.friendly_token[0,20], :type => 'social')
+      user.skip_confirmation!
+      user.save!
+      user
     end
   end
 
